@@ -24,30 +24,30 @@
   </header>
 
   <main class="container">
-    <h2>Jugadores Registrados</h2>
+    <h2>Jugadores Inscritos</h2>
 
-    <input type="text" id="buscador" placeholder="Buscar por nombre o equipo..." />
-
-    <div class="tabs">
-      <div class="tab active" data-genero="todos">Todos</div>
-      <div class="tab" data-genero="Masculino">Masculino</div>
-      <div class="tab" data-genero="Femenino">Femenino</div>
+    <div class="tabs" id="tabs-container">
+      <div class="tab active" data-filter="Todos">Todos</div>
+      <div class="tab" data-filter="Masculino">Masculino</div>
+      <div class="tab" data-filter="Femenino">Femenino</div>
+      <div class="tab" data-filter="Azul">Azul</div>
+      <div class="tab" data-filter="Blanco">Blanco</div>
+      <div class="tab" data-filter="Celeste">Celeste</div>
     </div>
 
-    <p id="contador">Mostrando 0 jugadores</p>
+    <input type="text" id="buscador" placeholder="Buscar por nombre..." />
 
-    <div id="loader">Cargando jugadores...</div>
-
-    <table id="tabla-jugadores" style="display: none;">
+    <table id="tabla-jugadores">
       <thead>
         <tr>
           <th>Nombre</th>
+          <th>Email</th>
           <th>Género</th>
           <th>Equipo</th>
           <th>Posición</th>
         </tr>
       </thead>
-      <tbody id="jugadores-body"></tbody>
+      <tbody></tbody>
     </table>
   </main>
 
@@ -56,65 +56,57 @@
   </footer>
 
   <script>
-    const backendURL = "https://fivedecopas-backend.onrender.com/jugadores";
-    let jugadores = [];
+    async function obtenerJugadores() {
+      const res = await fetch("https://fivedecopas-backend.onrender.com/jugadores");
+      const data = await res.json();
+      return data;
+    }
 
-    const tbody = document.getElementById("jugadores-body");
-    const buscador = document.getElementById("buscador");
-    const tabs = document.querySelectorAll(".tab");
-    const contador = document.getElementById("contador");
-
-    let filtroGenero = "todos";
-
-    function renderJugadores(lista) {
+    function renderJugadores(jugadores) {
+      const tbody = document.querySelector("#tabla-jugadores tbody");
       tbody.innerHTML = "";
-      lista.forEach(j => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+      jugadores.forEach(j => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
           <td>${j.name}</td>
+          <td>${j.email}</td>
           <td>${j.genero}</td>
           <td>${j.equipo}</td>
-          <td>${j.posicion || "-"}</td>
+          <td>${j.position}</td>
         `;
-        tbody.appendChild(row);
+        tbody.appendChild(tr);
       });
-      contador.textContent = `Mostrando ${lista.length} jugador${lista.length !== 1 ? 'es' : ''}`;
     }
 
-    function filtrarYRenderizar() {
-      const texto = buscador.value.toLowerCase();
-      const filtrados = jugadores.filter(j => {
-        const coincideTexto = j.name.toLowerCase().includes(texto) || j.equipo.toLowerCase().includes(texto);
-        const coincideGenero = filtroGenero === "todos" || j.genero === filtroGenero;
-        return coincideTexto && coincideGenero;
-      });
+    function aplicarFiltros(jugadores) {
+      const filtro = document.querySelector(".tab.active").dataset.filter;
+      const query = document.getElementById("buscador").value.toLowerCase();
 
-      renderJugadores(filtrados);
+      return jugadores.filter(j => {
+        const matchGenero = (filtro === "Todos" || j.genero === filtro || j.equipo === filtro);
+        const matchNombre = j.name.toLowerCase().includes(query);
+        return matchGenero && matchNombre;
+      });
     }
 
-    fetch(backendURL)
-      .then(response => response.json())
-      .then(data => {
-        jugadores = data;
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("tabla-jugadores").style.display = "table";
-        filtrarYRenderizar();
-      })
-      .catch(err => {
-        document.getElementById("loader").innerText = "Error al cargar los jugadores 😢";
-        console.error(err);
+    async function iniciar() {
+      const jugadores = await obtenerJugadores();
+      renderJugadores(jugadores);
+
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          renderJugadores(aplicarFiltros(jugadores));
+        });
       });
 
-    buscador.addEventListener("input", filtrarYRenderizar);
-
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        filtroGenero = tab.dataset.genero;
-        filtrarYRenderizar();
+      document.getElementById("buscador").addEventListener("input", () => {
+        renderJugadores(aplicarFiltros(jugadores));
       });
-    });
+    }
+
+    iniciar();
   </script>
 </body>
 </html>
