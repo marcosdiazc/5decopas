@@ -1,30 +1,100 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inscripción - 5 de Copas FC</title>
+  <base href="/web_5decopas/">
+  <link rel="stylesheet" href="static/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="index.html"><img src="static/logo.png" alt="Logo" class="logo" /></a>
+      <h1>5 de Copas FC</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="inscripcion.html">Inscribirme</a></li>
+          <li><a href="jugadores.html">Jugadores</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-{% block content %}
-<h2>Formulario de Inscripción</h2>
-<form action="/inscripcion" method="POST">
-  <label for="name">Nombre completo</label>
-  <input type="text" id="name" name="name" required>
+  <main class="container">
+    <h2>Formulario de Inscripción</h2>
 
-  <label for="email">Correo electrónico</label>
-  <input type="email" id="email" name="email" required>
+    <form id="formulario-inscripcion">
+      <label for="name">Nombre completo</label>
+      <input type="text" id="name" name="name" required>
 
-  <label for="position">Posición preferida</label>
-  <input type="text" id="position" name="position">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" required>
 
-  <label for="genero">Género</label>
-  <select id="genero" name="genero" required>
-    <option value="Masculino">Masculino</option>
-    <option value="Femenino">Femenino</option>
-  </select>
+      <label for="genero">Género</label>
+      <select id="genero" name="genero" required>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+      </select>
 
-  <label for="equipo">Equipo</label>
-  <select id="equipo" name="equipo" required>
-    <option value="Azul">Azul</option>
-    <option value="Blanco">Blanco</option>
-    <option value="Celeste">Celeste</option>
-  </select>
+      <label for="equipo">Equipo</label>
+      <select id="equipo" name="equipo" required>
+        <option value="Azul">Azul</option>
+        <option value="Blanco">Blanco</option>
+        <option value="Celeste">Celeste</option>
+      </select>
 
-  <button type="submit">Enviar</button>
-</form>
-{% endblock %}
+      <label for="posicion">Posición</label>
+      <input type="text" id="posicion" name="posicion">
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <p id="respuesta" style="margin-top: 1rem;"></p>
+  </main>
+
+  <footer>
+    <p>© 2025 5 de Copas Fútbol Club</p>
+  </footer>
+
+  <script>
+    document.getElementById("formulario-inscripcion").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        genero: document.getElementById("genero").value,
+        equipo: document.getElementById("equipo").value,
+        posicion: document.getElementById("posicion").value
+      };
+
+      const respuesta = document.getElementById("respuesta");
+
+      try {
+        const res = await fetch("https://fivedecopas-backend.onrender.com/inscripcion", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          respuesta.textContent = "✅ Inscripción enviada con éxito";
+          respuesta.style.color = "green";
+          document.getElementById("formulario-inscripcion").reset();
+        } else {
+          respuesta.textContent = `❌ Error: ${data.error || "No se pudo enviar el formulario"}`;
+          respuesta.style.color = "red";
+        }
+      } catch (err) {
+        respuesta.textContent = "❌ Error de conexión con el servidor";
+        respuesta.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

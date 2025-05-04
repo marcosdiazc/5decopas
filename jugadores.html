@@ -1,50 +1,120 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jugadores - 5 de Copas FC</title>
+  <base href="/web_5decopas/">
+  <link rel="stylesheet" href="static/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="index.html"><img src="static/logo.png" alt="Logo" class="logo" /></a>
+      <h1>5 de Copas FC</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="inscripcion.html">Inscribirme</a></li>
+          <li><a href="jugadores.html">Jugadores</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-{% block content %}
-<h2>Jugadores Inscritos</h2>
-<form method="get" id="filterForm">
-  <input type="text" name="q" placeholder="Buscar por nombre..." value="{{ q or '' }}">
+  <main class="container">
+    <h2>Jugadores Registrados</h2>
 
-  <select name="genero">
-    <option value="">Todos los géneros</option>
-    <option value="Masculino" {% if genero == 'Masculino' %}selected{% endif %}>Masculino</option>
-    <option value="Femenino" {% if genero == 'Femenino' %}selected{% endif %}>Femenino</option>
-  </select>
+    <input type="text" id="buscador" placeholder="Buscar por nombre o equipo..." />
 
-  <select name="equipo">
-    <option value="">Todos los equipos</option>
-    <option value="Azul" {% if equipo == 'Azul' %}selected{% endif %}>Azul</option>
-    <option value="Blanco" {% if equipo == 'Blanco' %}selected{% endif %}>Blanco</option>
-    <option value="Celeste" {% if equipo == 'Celeste' %}selected{% endif %}>Celeste</option>
-  </select>
+    <div class="tabs">
+      <div class="tab active" data-genero="todos">Todos</div>
+      <div class="tab" data-genero="Masculino">Masculino</div>
+      <div class="tab" data-genero="Femenino">Femenino</div>
+    </div>
 
-  <button type="submit">Filtrar</button>
-</form>
+    <p id="contador">Mostrando 0 jugadores</p>
 
-{% if jugadores %}
-<table>
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Posición</th>
-      <th>Género</th>
-      <th>Equipo</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for j in jugadores %}
-    <tr>
-      <td>{{ j[1] }}</td>
-      <td>{{ j[2] }}</td>
-      <td>{{ j[3] }}</td>
-      <td>{{ j[4] }}</td>
-      <td>{{ j[5] }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No se encontraron jugadores con esos filtros.</p>
-{% endif %}
-{% endblock %}
+    <div id="loader">Cargando jugadores...</div>
+
+    <table id="tabla-jugadores" style="display: none;">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Género</th>
+          <th>Equipo</th>
+          <th>Posición</th>
+        </tr>
+      </thead>
+      <tbody id="jugadores-body"></tbody>
+    </table>
+  </main>
+
+  <footer>
+    <p>© 2025 5 de Copas Fútbol Club</p>
+  </footer>
+
+  <script>
+    const backendURL = "https://fivedecopas-backend.onrender.com/jugadores";
+    let jugadores = [];
+
+    const tbody = document.getElementById("jugadores-body");
+    const buscador = document.getElementById("buscador");
+    const tabs = document.querySelectorAll(".tab");
+    const contador = document.getElementById("contador");
+
+    let filtroGenero = "todos";
+
+    function renderJugadores(lista) {
+      tbody.innerHTML = "";
+      lista.forEach(j => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${j.name}</td>
+          <td>${j.genero}</td>
+          <td>${j.equipo}</td>
+          <td>${j.posicion || "-"}</td>
+        `;
+        tbody.appendChild(row);
+      });
+      contador.textContent = `Mostrando ${lista.length} jugador${lista.length !== 1 ? 'es' : ''}`;
+    }
+
+    function filtrarYRenderizar() {
+      const texto = buscador.value.toLowerCase();
+      const filtrados = jugadores.filter(j => {
+        const coincideTexto = j.name.toLowerCase().includes(texto) || j.equipo.toLowerCase().includes(texto);
+        const coincideGenero = filtroGenero === "todos" || j.genero === filtroGenero;
+        return coincideTexto && coincideGenero;
+      });
+
+      renderJugadores(filtrados);
+    }
+
+    fetch(backendURL)
+      .then(response => response.json())
+      .then(data => {
+        jugadores = data;
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("tabla-jugadores").style.display = "table";
+        filtrarYRenderizar();
+      })
+      .catch(err => {
+        document.getElementById("loader").innerText = "Error al cargar los jugadores 😢";
+        console.error(err);
+      });
+
+    buscador.addEventListener("input", filtrarYRenderizar);
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        filtroGenero = tab.dataset.genero;
+        filtrarYRenderizar();
+      });
+    });
+  </script>
+</body>
+</html>
