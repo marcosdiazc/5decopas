@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Jugadores Inscritos</h2>
+<form method="get" id="filterForm">
+  <input type="text" name="q" placeholder="Buscar por nombre..." value="{{ q or '' }}">
+
+  <select name="genero">
+    <option value="">Todos los géneros</option>
+    <option value="Masculino" {% if genero == 'Masculino' %}selected{% endif %}>Masculino</option>
+    <option value="Femenino" {% if genero == 'Femenino' %}selected{% endif %}>Femenino</option>
+  </select>
+
+  <select name="equipo">
+    <option value="">Todos los equipos</option>
+    <option value="Azul" {% if equipo == 'Azul' %}selected{% endif %}>Azul</option>
+    <option value="Blanco" {% if equipo == 'Blanco' %}selected{% endif %}>Blanco</option>
+    <option value="Celeste" {% if equipo == 'Celeste' %}selected{% endif %}>Celeste</option>
+  </select>
+
+  <button type="submit">Filtrar</button>
+</form>
+
+{% if jugadores %}
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Posición</th>
+      <th>Género</th>
+      <th>Equipo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for j in jugadores %}
+    <tr>
+      <td>{{ j[1] }}</td>
+      <td>{{ j[2] }}</td>
+      <td>{{ j[3] }}</td>
+      <td>{{ j[4] }}</td>
+      <td>{{ j[5] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No se encontraron jugadores con esos filtros.</p>
+{% endif %}
+{% endblock %}

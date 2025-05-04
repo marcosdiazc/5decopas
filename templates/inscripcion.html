@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Formulario de Inscripción</h2>
+<form action="/inscripcion" method="POST">
+  <label for="name">Nombre completo</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="email">Correo electrónico</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="position">Posición preferida</label>
+  <input type="text" id="position" name="position">
+
+  <label for="genero">Género</label>
+  <select id="genero" name="genero" required>
+    <option value="Masculino">Masculino</option>
+    <option value="Femenino">Femenino</option>
+  </select>
+
+  <label for="equipo">Equipo</label>
+  <select id="equipo" name="equipo" required>
+    <option value="Azul">Azul</option>
+    <option value="Blanco">Blanco</option>
+    <option value="Celeste">Celeste</option>
+  </select>
+
+  <button type="submit">Enviar</button>
+</form>
+{% endblock %}
