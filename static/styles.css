@@ -152,3 +152,42 @@ footer {
     justify-content: flex-start;
   }
 }
+
+
+/* ...lo que ya tenés arriba... */
+
+/* NUEVO: navegación hamburguesa */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background: #e0e1dd;
+  transition: transform .3s;
+}
+
+/* Nav oculto en mobile */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+nav ul.mobile-hidden {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hamburger { display: flex; }
+}
