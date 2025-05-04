@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jugadores - 5 de Copas FC</title>
-  <base href="/5decopas/">
-  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,35 +18,43 @@
           <li><a href="/inscripcion.html">Inscribirme</a></li>
           <li><a href="/jugadores.html">Jugadores</a></li>
         </ul>
-      </nav> 
+      </nav>
     </div>
   </header>
 
   <main class="container">
     <h2>Jugadores Inscritos</h2>
 
-    <div class="tabs" id="tabs-container">
-      <div class="tab active" data-filter="Todos">Todos</div>
-      <div class="tab" data-filter="Masculino">Masculino</div>
-      <div class="tab" data-filter="Femenino">Femenino</div>
-      <div class="tab" data-filter="Azul">Azul</div>
-      <div class="tab" data-filter="Blanco">Blanco</div>
-      <div class="tab" data-filter="Celeste">Celeste</div>
+    <div class="tabs">
+      <select id="genero">
+        <option value="">Género</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+      </select>
+
+      <select id="equipo">
+        <option value="">Equipo</option>
+        <option value="Azul">Azul</option>
+        <option value="Blanco">Blanco</option>
+        <option value="Celeste">Celeste</option>
+      </select>
+
+      <button id="filtrar">Filtrar</button>
+      <button id="reset">Reset</button>
     </div>
 
-    <input type="text" id="buscador" placeholder="Buscar por nombre..." />
-
-    <table id="tabla-jugadores">
+    <table>
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Email</th>
+          <th>Posición</th>
           <th>Género</th>
           <th>Equipo</th>
-          <th>Posición</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="tabla-jugadores">
+        <!-- Datos insertados por JS -->
+      </tbody>
     </table>
   </main>
 
@@ -56,57 +63,54 @@
   </footer>
 
   <script>
+    const API_URL = "https://fivedecopas-backend.onrender.com/api/jugadores";
+
+    const tbody = document.getElementById("tabla-jugadores");
+    const genero = document.getElementById("genero");
+    const equipo = document.getElementById("equipo");
+
     async function obtenerJugadores() {
-      const res = await fetch("https://fivedecopas-backend.onrender.com/jugadores");
+      const res = await fetch(API_URL);
       const data = await res.json();
       return data;
     }
 
-    function renderJugadores(jugadores) {
-      const tbody = document.querySelector("#tabla-jugadores tbody");
+    function renderizar(jugadores) {
       tbody.innerHTML = "";
       jugadores.forEach(j => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${j.name}</td>
-          <td>${j.email}</td>
-          <td>${j.genero}</td>
-          <td>${j.equipo}</td>
-          <td>${j.position}</td>
-        `;
-        tbody.appendChild(tr);
+        const row = `
+          <tr>
+            <td>${j.name}</td>
+            <td>${j.position}</td>
+            <td>${j.genero}</td>
+            <td>${j.equipo}</td>
+          </tr>`;
+        tbody.innerHTML += row;
       });
     }
 
-    function aplicarFiltros(jugadores) {
-      const filtro = document.querySelector(".tab.active").dataset.filter;
-      const query = document.getElementById("buscador").value.toLowerCase();
-
-      return jugadores.filter(j => {
-        const matchGenero = (filtro === "Todos" || j.genero === filtro || j.equipo === filtro);
-        const matchNombre = j.name.toLowerCase().includes(query);
-        return matchGenero && matchNombre;
-      });
-    }
-
-    async function iniciar() {
+    async function filtrar() {
       const jugadores = await obtenerJugadores();
-      renderJugadores(jugadores);
-
-      document.querySelectorAll(".tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-          document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-          tab.classList.add("active");
-          renderJugadores(aplicarFiltros(jugadores));
-        });
-      });
-
-      document.getElementById("buscador").addEventListener("input", () => {
-        renderJugadores(aplicarFiltros(jugadores));
-      });
+      const filtrados = jugadores.filter(j =>
+        (!genero.value || j.genero === genero.value) &&
+        (!equipo.value || j.equipo === equipo.value)
+      );
+      renderizar(filtrados);
     }
 
-    iniciar();
+    document.getElementById("filtrar").addEventListener("click", filtrar);
+    document.getElementById("reset").addEventListener("click", async () => {
+      genero.value = "";
+      equipo.value = "";
+      const jugadores = await obtenerJugadores();
+      renderizar(jugadores);
+    });
+
+    // Carga inicial
+    (async () => {
+      const jugadores = await obtenerJugadores();
+      renderizar(jugadores);
+    })();
   </script>
 </body>
 </html>

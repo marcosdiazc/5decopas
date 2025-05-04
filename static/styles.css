@@ -1,27 +1,25 @@
-/* Reset básico */
+/* Reset y estructura base */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Flex para que el footer se mantenga abajo */
 html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
   font-family: 'Poppins', sans-serif;
-  background-color: #0d1b2a; /* fondo oscuro */
-  color: #e0e1dd; /* texto claro */
+  background-color: #0d1b2a;
+  color: #e0e1dd;
   line-height: 1.6;
 }
 
 main {
-  flex: 1;
+  flex: 1; /* Ocupa todo lo disponible entre header y footer */
   margin-top: 2rem;
 }
 
-/* Contenedor general */
 .container {
   width: 90%;
   max-width: 1000px;
@@ -65,7 +63,7 @@ nav a:hover {
   color: #00b4d8;
 }
 
-/* Formularios y botones */
+/* Form */
 input, select, button {
   width: 100%;
   padding: 0.7rem;
@@ -90,7 +88,7 @@ button:hover {
   background-color: #023e8a;
 }
 
-/* Tablas */
+/* Table */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -129,7 +127,7 @@ th, td {
   color: white;
 }
 
-/* Footer fijo al fondo */
+/* Footer */
 footer {
   background-color: #1b263b;
   color: white;
