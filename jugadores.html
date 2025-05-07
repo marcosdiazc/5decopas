@@ -3,123 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jugadores - 5 de Copas FC</title>
-  <link rel="stylesheet" href="/static/styles.css" />
+  <title>Jugadores · 5 de Copas FC</title>
+  <link rel="stylesheet" href="/static/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- HEADER -->
   <header>
     <div class="container header-content">
-      <a href="/index.html">
-        <img src="/static/logo.png" alt="Logo" class="logo" />
-      </a>
-      <h1 style="font-size:1.4rem;margin-left:.5rem;">5 de Copas FC</h1>
-  
-      <!-- Botón hamburguesa -->
-      <div class="hamburger" id="burger">
-        <div></div><div></div><div></div>
-      </div>
-  
-      <!-- Navegación -->
+      <a href="/index.html"><img src="/static/logo.png" class="logo"></a>
+      <h1 class="site-title">5&nbsp;de&nbsp;Copas FC</h1>
+      <div class="hamburger" id="burger"><div></div><div></div><div></div></div>
       <nav>
-        <ul id="nav-ul" class="mobile-hidden">
+        <ul id="nav-ul">
           <li><a href="/index.html">Inicio</a></li>
           <li><a href="/inscripcion.html">Inscribirme</a></li>
           <li><a href="/jugadores.html">Jugadores</a></li>
+          <li><a href="https://fivedecopas-backend.onrender.com/admin" target="_blank">Admin</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
+  <!-- CONTENIDO -->
   <main class="container">
-    <h2>Jugadores Inscritos</h2>
+    <h2>Jugadores inscritos</h2>
 
+    <!-- Filtros -->
     <div class="tabs">
       <select id="genero">
         <option value="">Género</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Femenino">Femenino</option>
+        <option>Masculino</option><option>Femenino</option>
       </select>
 
       <select id="equipo">
         <option value="">Equipo</option>
-        <option value="Azul">Azul</option>
-        <option value="Blanco">Blanco</option>
-        <option value="Celeste">Celeste</option>
+        <option>Azul</option><option>Blanco</option><option>Celeste</option>
       </select>
 
       <button id="filtrar">Filtrar</button>
       <button id="reset">Reset</button>
     </div>
 
+    <!-- Tabla -->
     <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Posición</th>
-          <th>Género</th>
-          <th>Equipo</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-jugadores">
-        <!-- Datos insertados por JS -->
-      </tbody>
+      <thead><tr>
+        <th>Nombre</th><th>Posición</th><th>Género</th><th>Equipo</th>
+      </tr></thead>
+      <tbody id="tabla-jugadores"></tbody>
     </table>
   </main>
 
-  <footer>
-    <p>© 2025 5 de Copas Fútbol Club</p>
-  </footer>
+  <footer><p>© 2025 5 de Copas Fútbol Club</p></footer>
 
+  <!-- SCRIPTS -->
+  <script src="/static/menu.js"></script>
   <script>
-    const API_URL = "https://fivedecopas-backend.onrender.com/api/jugadores";
-
-    const tbody = document.getElementById("tabla-jugadores");
+    const API = "https://fivedecopas-backend.onrender.com/api/jugadores";
+    const tbody  = document.getElementById("tabla-jugadores");
     const genero = document.getElementById("genero");
     const equipo = document.getElementById("equipo");
 
-    async function obtenerJugadores() {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      return data;
+    async function fetchJugadores(){ const r = await fetch(API); return r.json(); }
+
+    function pintar(list){
+      tbody.innerHTML = list.map(j => `
+        <tr><td>${j.name}</td><td>${j.position}</td>
+            <td>${j.genero}</td><td>${j.equipo}</td></tr>`).join("");
     }
 
-    function renderizar(jugadores) {
-      tbody.innerHTML = "";
-      jugadores.forEach(j => {
-        const row = `
-          <tr>
-            <td>${j.name}</td>
-            <td>${j.position}</td>
-            <td>${j.genero}</td>
-            <td>${j.equipo}</td>
-          </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    async function filtrar() {
-      const jugadores = await obtenerJugadores();
-      const filtrados = jugadores.filter(j =>
+    async function filtrar(){
+      const todos = await fetchJugadores();
+      const out = todos.filter(j =>
         (!genero.value || j.genero === genero.value) &&
         (!equipo.value || j.equipo === equipo.value)
       );
-      renderizar(filtrados);
+      pintar(out);
     }
 
-    document.getElementById("filtrar").addEventListener("click", filtrar);
-    document.getElementById("reset").addEventListener("click", async () => {
-      genero.value = "";
-      equipo.value = "";
-      const jugadores = await obtenerJugadores();
-      renderizar(jugadores);
-    });
+    document.getElementById("filtrar").onclick = filtrar;
+    document.getElementById("reset").onclick = async()=>{
+      genero.value = equipo.value = "";
+      pintar(await fetchJugadores());
+    };
 
-    // Carga inicial
-    (async () => {
-      const jugadores = await obtenerJugadores();
-      renderizar(jugadores);
-    })();
+    // carga inicial
+    (async()=> pintar(await fetchJugadores()))();
   </script>
 </body>
 </html>

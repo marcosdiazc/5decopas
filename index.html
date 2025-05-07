@@ -4,59 +4,62 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>5 de Copas FC</title>
-  <base href="/5decopas/">
   <link rel="stylesheet" href="/static/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
     <div class="container header-content">
-      <a href="/index.html">
-        <img src="/static/logo.png" alt="Logo" class="logo" />
-      </a>
-      <h1 style="font-size:1.4rem;margin-left:.5rem;">5 de Copas FC</h1>
+      <a href="/index.html"><img src="/static/logo.png" class="logo" /></a>
+      <h1 class="site-title">5&nbsp;de&nbsp;Copas FC</h1>
   
-      <!-- Botón hamburguesa -->
-      <div class="hamburger" id="burger">
-        <div></div><div></div><div></div>
-      </div>
+      <div class="hamburger" id="burger"><div></div><div></div><div></div></div>
   
-      <!-- Navegación -->
       <nav>
-        <ul id="nav-ul" class="mobile-hidden">
+        <ul id="nav-ul">
           <li><a href="/index.html">Inicio</a></li>
           <li><a href="/inscripcion.html">Inscribirme</a></li>
           <li><a href="/jugadores.html">Jugadores</a></li>
+          <li><a href="https://fivedecopas-backend.onrender.com/admin" target="_blank">Admin</a></li>
         </ul>
       </nav>
     </div>
   </header>
   
-  <main class="container" style="text-align:center;max-width:1200px;">
-    <!-- Video hero (reemplazá el ID por el tuyo) -->
-    <iframe width="100%" height="450"
-            src="https://www.youtube.com/embed/ScMzIvxBSi4?rel=0&controls=1"
-            title="YouTube video" frameborder="0"
-            allowfullscreen></iframe>
-  
+
+  <main class="container" style="max-width:1200px;text-align:center">
+    <!-- Video hero: autoplay, loop, mute, sin controles -->
+    <div style="position:relative;padding-top:56.25%;overflow:hidden;border-radius:10px">
+      <iframe
+        src="https://www.youtube.com/embed/9WPvLO1dyVc?autoplay=1&mute=1&loop=1&playlist=9WPvLO1dyVc&controls=0&modestbranding=1&rel=0"
+        title="Video 5 de Copas"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen></iframe>
+    </div>
+
     <h2 style="margin:2rem 0 1rem">¿Querés ser parte?</h2>
     <a href="/inscripcion.html"><button>Inscribirme</button></a>
-  </main>
-  
-  <script src="/static/menu.js"></script>
-  
 
-  <main class="container">
-    <h2>¡Bienvenido a 5 de Copas Fútbol Club!</h2>
-    <p>Somos un club inclusivo y apasionado por el fútbol amateur. Tenemos equipos masculinos y femeninos, y estamos en constante crecimiento.</p>
-    <p>Si querés sumarte a jugar o competir, ¡estás en el lugar indicado!</p>
-    <a href="inscripcion.html">
-      <button>Inscribirme</button>
-    </a>
+    <!-- Breve “quiénes somos” -->
+    <section class="quienes-somos">
+      <h2>Quiénes somos</h2>
+      <p>
+        <strong>5 de Copas FC</strong> es un club de futbol  
+        Jugamos torneos zonales cada semana con pasión, respeto y compañerismo.
+      </p>
+      <p>
+        Más que un equipo, somos una comunidad que comparte valores, desafíos y alegrías dentro y fuera de la cancha.
+        Si amás el fútbol, ¡acá tenés tu lugar!
+      </p>
+    </section>
+    
   </main>
 
   <footer>
-    <p>© 2025 5 de Copas Fútbol Club</p>
+    <p>© 2025&nbsp;5&nbsp;de&nbsp;Copas&nbsp;Fútbol&nbsp;Club</p>
   </footer>
+
+  <script src="/static/menu.js"></script>
 </body>
 </html>

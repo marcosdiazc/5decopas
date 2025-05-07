@@ -1,4 +1,4 @@
-/* Reset y estructura base */
+/* --- Reset y estructura base --- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -16,7 +16,7 @@ html, body {
 }
 
 main {
-  flex: 1; /* Ocupa todo lo disponible entre header y footer */
+  flex: 1;
   margin-top: 2rem;
 }
 
@@ -27,7 +27,7 @@ main {
   padding: 1rem 0;
 }
 
-/* Header */
+/* --- Header --- */
 header {
   background-color: #1b263b;
   color: white;
@@ -45,11 +45,20 @@ header {
   height: 50px;
 }
 
+.site-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-left: 0.8rem;
+  margin-top: 4px;
+}
+
+/* --- Navegación --- */
 nav ul {
   list-style: none;
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
+  transition: max-height 0.4s ease;
 }
 
 nav a {
@@ -63,7 +72,50 @@ nav a:hover {
   color: #00b4d8;
 }
 
-/* Form */
+/* --- Menú hamburguesa --- */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 24px;
+  height: 3px;
+  background: #e0e1dd;
+  transition: .3s;
+}
+
+.hamburger.active div:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.hamburger.active div:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active div:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* --- Responsive menú --- */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  nav ul {
+    flex-direction: column;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  nav ul.open {
+    max-height: 500px; /* espacio para los links */
+  }
+}
+
+/* --- Formulario --- */
 input, select, button {
   width: 100%;
   padding: 0.7rem;
@@ -76,19 +128,32 @@ input, select, button {
 }
 
 button {
-  background-color: #0077b6;
+  background: linear-gradient(to right, #00b4d8, #0077b6);
   color: white;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
+
 
 button:hover {
-  background-color: #023e8a;
+  background-color: #0096c7;
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 150, 199, 0.4);
 }
 
-/* Table */
+button:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 8px rgba(0, 119, 182, 0.2);
+}
+
+
+/* --- Tabla de jugadores --- */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -105,7 +170,7 @@ th, td {
   text-align: left;
 }
 
-/* Tabs */
+/* --- Tabs --- */
 .tabs {
   display: flex;
   gap: 1rem;
@@ -127,7 +192,7 @@ th, td {
   color: white;
 }
 
-/* Footer */
+/* --- Footer --- */
 footer {
   background-color: #1b263b;
   color: white;
@@ -136,58 +201,28 @@ footer {
   margin-top: auto;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  nav ul {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .tabs {
-    justify-content: flex-start;
-  }
+.quienes-somos {
+  background-color: #1b263b;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 3rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  color: #e0e1dd;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.8;
 }
 
-
-/* ...lo que ya tenés arriba... */
-
-/* NUEVO: navegación hamburguesa */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  cursor: pointer;
-}
-.hamburger div {
-  width: 25px;
-  height: 3px;
-  background: #e0e1dd;
-  transition: transform .3s;
+.quienes-somos h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  text-align: center;
 }
 
-/* Nav oculto en mobile */
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-}
-nav ul.mobile-hidden {
-  display: none;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-/* Móvil */
-@media (max-width: 768px) {
-  nav ul {
-    flex-direction: column;
-    width: 100%;
-  }
-  .hamburger { display: flex; }
+.quienes-somos p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
