@@ -33,83 +33,44 @@
     <div class="tabs">
       <select id="genero">
         <option value="">Género</option>
-        <option>Masculino</option><option>Femenino</option>
+        <option>Masculino</option>
+        <option>Femenino</option>
       </select>
 
       <select id="equipo">
         <option value="">Equipo</option>
-        <option>Azul</option><option>Blanco</option><option>Celeste</option>
+        <option>Azul</option>
+        <option>Blanco</option>
+        <option>Celeste</option>
       </select>
 
       <button id="filtrar">Filtrar</button>
       <button id="reset">Reset</button>
     </div>
 
-  <!-- Tabla -->
-  <div class="tabla-responsive">
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Posición</th>
-          <th>Género</th>
-          <th>Equipo</th>
-          <th>Goles</th>
-          <th>Asistencias</th>
-          <th>Partidos</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-jugadores"></tbody>
-    </table>
-  </div>
-
-    
+    <!-- Tabla -->
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Posición</th>
+            <th>Género</th>
+            <th>Equipo</th>
+            <th>Goles</th>
+            <th>Asistencias</th>
+            <th>Partidos</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-jugadores"></tbody>
+      </table>
+    </div>
   </main>
 
   <footer><p>© 2025 5 de Copas Fútbol Club</p></footer>
 
   <!-- SCRIPTS -->
   <script src="/static/menu.js"></script>
-  <script>
-    const API = "https://fivedecopas-backend.onrender.com/jugadores";
-    const tbody  = document.getElementById("tabla-jugadores");
-    const genero = document.getElementById("genero");
-    const equipo = document.getElementById("equipo");
-
-    async function fetchJugadores(){ const r = await fetch(API); return r.json(); }
-
-    function pintar(list){
-      tbody.innerHTML = list.map(j => `
-        <tr>
-          <td>${j.name}</td>
-          <td>${j.position || '-'}</td>
-          <td>${j.gender}</td>
-          <td>${j.team}</td>
-          <td>${j.goals ?? 0}</td>
-          <td>${j.assistances ?? 0}</td>
-          <td>${j.matches ?? 0}</td>
-        </tr>
-      `).join("");
-    }
-
-
-    async function filtrar(){
-      const todos = await fetchJugadores();
-      const out = todos.filter(j =>
-  (!genero.value || j.gender === genero.value) &&
-  (!equipo.value || j.team === equipo.value)
-);
-      pintar(out);
-    }
-
-    document.getElementById("filtrar").onclick = filtrar;
-    document.getElementById("reset").onclick = async()=>{
-      genero.value = equipo.value = "";
-      pintar(await fetchJugadores());
-    };
-
-    // carga inicial
-    (async()=> pintar(await fetchJugadores()))();
-  </script>
+  <script src="/static/jugadores.js"></script>
 </body>
 </html>
