@@ -249,3 +249,11 @@ footer {
   border-radius: 16px;
 }
 
+.tabla-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.tabla-responsive table {
+  min-width: 700px;
+}

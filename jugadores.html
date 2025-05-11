@@ -45,7 +45,8 @@
       <button id="reset">Reset</button>
     </div>
 
-    <!-- Tabla -->
+  <!-- Tabla -->
+  <div class="tabla-responsive">
     <table>
       <thead>
         <tr>
@@ -60,6 +61,8 @@
       </thead>
       <tbody id="tabla-jugadores"></tbody>
     </table>
+  </div>
+
     
   </main>
 
@@ -68,7 +71,7 @@
   <!-- SCRIPTS -->
   <script src="/static/menu.js"></script>
   <script>
-    const API = "https://fivedecopas-backend.onrender.com/api/jugadores";
+    const API = "https://fivedecopas-backend.onrender.com/jugadores";
     const tbody  = document.getElementById("tabla-jugadores");
     const genero = document.getElementById("genero");
     const equipo = document.getElementById("equipo");
@@ -77,16 +80,25 @@
 
     function pintar(list){
       tbody.innerHTML = list.map(j => `
-        <tr><td>${j.name}</td><td>${j.position}</td>
-            <td>${j.genero}</td><td>${j.equipo}</td></tr>`).join("");
+        <tr>
+          <td>${j.name}</td>
+          <td>${j.position || '-'}</td>
+          <td>${j.gender}</td>
+          <td>${j.team}</td>
+          <td>${j.goals ?? 0}</td>
+          <td>${j.assistances ?? 0}</td>
+          <td>${j.matches ?? 0}</td>
+        </tr>
+      `).join("");
     }
+
 
     async function filtrar(){
       const todos = await fetchJugadores();
       const out = todos.filter(j =>
-        (!genero.value || j.genero === genero.value) &&
-        (!equipo.value || j.equipo === equipo.value)
-      );
+  (!genero.value || j.gender === genero.value) &&
+  (!equipo.value || j.team === equipo.value)
+);
       pintar(out);
     }
 
