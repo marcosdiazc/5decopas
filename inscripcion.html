@@ -76,7 +76,7 @@
         position: form.position.value
       };
       try{
-        const res = await fetch("https://fivedecopas-backend.onrender.com/api/inscripcion",{
+        const res = await fetch("https://fivedecopas-backend.onrender.com/inscripcion",{
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify(data)
