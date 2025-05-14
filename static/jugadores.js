@@ -15,12 +15,8 @@ function pintar(list){
   tbody.innerHTML = list.map(j => `
     <tr>
       <td>${j.name}</td>
-      <td>${j.position || '-'}</td>
-      <td>${j.gender}</td>
       <td>${j.team}</td>
       <td>${j.goals ?? 0}</td>
-      <td>${j.assistances ?? 0}</td>
-      <td>${j.matches ?? 0}</td>
     </tr>
   `).join("");
 }
